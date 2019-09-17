@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import serial
 from datetime import datetime
 import threading
+from Drivers import db
 import time
 
 
@@ -60,12 +61,16 @@ class SerialStart:
 
 
 class Thread4Serial(threading.Thread):
-    def __init__(self, callback_handler, periodic):
+    def __init__(self, callback_handler, serial_port_as_obj, db_name):
         threading.Thread.__init__(self)
         self._running = True
         self.__handler = callback_handler
-        self.__time = periodic
+        self.serial_port = serial_port_as_obj
         self._pause = False
+
+        self.db_conn = None
+        self.db_cursor = None
+        self.db_name = db_name
 
     def terminate(self):
         self._running = False
@@ -75,10 +80,24 @@ class Thread4Serial(threading.Thread):
         self.start()
 
     def run(self):
+        self.db_conn, self.db_cursor = db.init_db(self.db_name)
+        print('Thread was run')
         while self._running:
-            time.sleep(self.__time)
-            if not self._pause:
-                self.__handler()
+            try:
+                data = self.serial_port.readline()
+            except Exception as err:
+                print('Can not read from port {}'.format(err))
+            else:
+                try:
+                    data = (data.decode('ascii')).strip()
+                except Exception as err:
+                    print('Can not decode in "ascii" {}'.format(err))
+                else:
+                    # print('{} {}'.format(datetime.now(), data))
+                    # self.__handler(data)
+                    if 'V' in data:
+                        db.insert_into_db(self.db_cursor, time.time(), datetime.now(), data.split('V')[1])
+                        db.commit_changes(self.db_conn)
 
 
 
