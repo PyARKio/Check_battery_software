@@ -8,11 +8,18 @@ def init_db(name_db):
     try:
         conn = sqlite3.connect('{}.db'.format(name_db))  # или :memory: чтобы сохранить в RAM
     except Exception as err:
-        print(err)
+        log.error(err)
         return False, False
     else:
-        cursor = conn.cursor()
-        return conn, cursor
+        log.info('Init db <{}>: successfully'.format(name_db))
+        try:
+            cursor = conn.cursor()
+        except Exception as err:
+            log.error(err)
+            return False, False
+        else:
+            log.info('Create cursor for db <{}>: successfully'.format(name_db))
+            return conn, cursor
 
 
 def get_metadata(conn, cursor):
@@ -29,13 +36,14 @@ def create_table_head_data_in_db(cursor):
     try:
         cursor.execute("CREATE TABLE head_data ("
                        "battery_name varchar, "
-                       "discharge_current varchar, "
+                       "discharge_current int, "
                        "start_at_in_sec timestamp, "
                        "start_at_in_date timestamp);")
     except Exception as err:
         log.error(err)
         return False
     else:
+        log.info('Create table <head_data>: successfully')
         return True
 
 
@@ -43,21 +51,19 @@ def create_table_in_db(cursor):
     # Execute a command: this creates a new table
     try:
         cursor.execute("CREATE TABLE battery_data ("
-                       "id serial PRIMARY KEY, "
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                        "time_sec timestamp, "
                        "time_in_date timestamp, "
-                       "volt varchar);")
+                       "volt int);")
     except Exception as err:
         log.error(err)
         return False
     else:
+        log.info('Create table <battery_data>: successfully')
         return True
 
 
 def insert_into_head_data(cursor, bat_name, dis, in_sec, in_date):
-    # Pass data to fill a query placeholders and let Psycopg perform
-    # the correct conversion (no more SQL injections!)
-    # cursor.execute("INSERT INTO test_db (num, data) VALUES (%s, %s)", (123478, "passwd"))
     try:
         cursor.execute("INSERT INTO head_data ("
                        "battery_name, "
@@ -68,13 +74,11 @@ def insert_into_head_data(cursor, bat_name, dis, in_sec, in_date):
         log.error(err)
         return False
     else:
+        log.info('Insert in table <head_data> {} {} {} {}: successfully'.format(bat_name, str(dis), in_sec, in_date))
         return True
 
 
 def insert_into_db(cursor, in_sec, in_date, volt):
-    # Pass data to fill a query placeholders and let Psycopg perform
-    # the correct conversion (no more SQL injections!)
-    # cursor.execute("INSERT INTO test_db (num, data) VALUES (%s, %s)", (123478, "passwd"))
     try:
         cursor.execute("INSERT INTO battery_data ("
                        "time_sec, "
@@ -88,23 +92,28 @@ def insert_into_db(cursor, in_sec, in_date, volt):
 
 
 def select_from_db(cursor, name_table_in_db, param='*'):
-    # Query the database and obtain data as Python objects
     try:
         cursor.execute("SELECT {} FROM {};".format(param, name_table_in_db))
     except Exception as err:
+        print(err)
         log.error(err)
         return False
     else:
         try:
             data = cursor.fetchall()
         except Exception as err:
+            print(err)
             log.error(err)
             return False
         else:
+            log.info('Select {} from table {}: successfully'.format(param, name_table_in_db))
             print(len(data))
+            print(data)
 
-            for line in data:
-                print(line)
+            # for line in data:
+            #     print(line)
+
+            return data
 
 
 def delete_from_table_in_db(cursor, name_table_in_db, key, value):
@@ -121,6 +130,7 @@ def commit_changes(conn):
         log.error(err)
         return False
     else:
+        log.info('Commit: successfully')
         return True
 
 

@@ -151,20 +151,53 @@ class CheckBatteryCapacity(object):
         log.info('DB_conn: {}\nDB_cursor: {}'.format(self.db_conn, self.db_cursor))
 
         if self.db_conn and self.db_cursor:
-            db.create_table_head_data_in_db(self.db_cursor)
-            db.create_table_in_db(self.db_cursor)
-            db.commit_changes(self.db_conn)
+            if not db.create_table_head_data_in_db(self.db_cursor):
+                print('Can not create table <head_data>')
+                self.serial_disconnect()
+                log.info('SYSTEM STOP')
+                sys.exit(0)
+            if not db.create_table_in_db(self.db_cursor):
+                print('Can not create table <battery_data>')
+                self.serial_disconnect()
+                log.info('SYSTEM STOP')
+                sys.exit(0)
+            if not db.commit_changes(self.db_conn):
+                print('Can not commit')
+                self.serial_disconnect()
+                log.info('SYSTEM STOP')
+                sys.exit(0)
+        else:
+            print('Can not init db')
+            self.serial_disconnect()
+            log.info('SYSTEM STOP')
+            sys.exit(0)
 
     def db_head_data(self):
-        db.insert_into_head_data(self.db_cursor, self.battery_name, self.discharge_current, time.time(), datetime.now())
-        db.select_from_db(self.db_cursor, name_table_in_db='head_data')
-        db.commit_changes(self.db_conn)
+        if not db.insert_into_head_data(self.db_cursor, self.battery_name, self.discharge_current, time.time(), datetime.now()):
+            print('Can not insert in db {} {} {} {}'.
+                  format(self.battery_name, self.discharge_current, time.time(), datetime.now()))
+            self.serial_disconnect()
+            log.info('SYSTEM STOP')
+            sys.exit(0)
+        if not db.select_from_db(self.db_cursor, name_table_in_db='head_data'):
+            print('Can not select from table <head_data>')
+            self.serial_disconnect()
+            log.info('SYSTEM STOP')
+            sys.exit(0)
+        if not db.commit_changes(self.db_conn):
+            print('Can not commit')
+            self.serial_disconnect()
+            log.info('SYSTEM STOP')
+            sys.exit(0)
 
     def serial_connect(self):
         self.class_serial_start = SerialStart(port=self.port, baud=self.baud)
 
-        if self.class_serial_start.connect_to_port():
-            print('con good')
+        if not self.class_serial_start.connect_to_port():
+            print('Can not connect to {}'.format(self.port))
+            self.serial_disconnect()
+            log.info('SYSTEM STOP')
+            sys.exit(0)
 
         self.thread_for_serial = Thread4Serial(self.call_back_from_serial, self.class_serial_start.serial_port,
                                                self.db_name)
@@ -172,21 +205,35 @@ class CheckBatteryCapacity(object):
 
     def serial_disconnect(self):
         self.thread_for_serial.terminate()
-        while self.thread_for_serial.isAlive():
+        timeout = time.time()
+        while self.thread_for_serial.isAlive() and time.time() - timeout < 10:
             pass
-        if self.class_serial_start.disconnect_from_port():
-            print('discon good')
+        if not self.class_serial_start.disconnect_from_port():
+            print('Could not disconnect from port')
 
     def cmd_run(self):
         while self.__cmd_run:
             data_cmd = input('Enter command -> ')
-            print(data_cmd)
+            log.info('Enter command -> {}'.format(data_cmd))
 
             if data_cmd == 'exit':
                 self.serial_disconnect()
                 self.__cmd_run = False
-            elif data_cmd == 'reda_db':
+            elif data_cmd == 'read_db':
                 db.select_from_db(self.db_cursor, name_table_in_db='battery_data')
+            elif data_cmd == 'start print':
+                self.thread_for_serial._print = True
+            elif data_cmd == 'stop print':
+                self.thread_for_serial._print = False
+            elif data_cmd == 'capacity':
+                data = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='volt')
+                if not data:
+                    print('Can not select from table <battery_data>')
+                    self.serial_disconnect()
+                    log.info('SYSTEM STOP')
+                    sys.exit(0)
+
+
 
 
 def main():
@@ -228,6 +275,7 @@ if __name__ == '__main__':
     con.cmd_run()
 
     print('SYSTEM STOP')
+    log.info('SYSTEM STOP')
     sys.exit(0)
 
 

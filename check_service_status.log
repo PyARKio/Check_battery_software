@@ -1,1 +1,145 @@
-[2019-09-18 07:20:07,898] INFO run:18:<module>: Starting of check_battery_capacity
+[2019-09-18 17:53:34,026] INFO run:18:<module>: Starting of check_battery_capacity
+[2019-09-18 17:53:34,027] INFO run:26:__init__: __init__
+[2019-09-18 17:53:34,027] INFO run:94:set_com_port: Enter the com port
+[2019-09-18 17:53:36,084] INFO run:101:set_com_port: User entered COM13
+[2019-09-18 17:53:36,084] INFO run:108:set_baud: Enter the baud
+[2019-09-18 17:53:38,847] INFO run:115:set_baud: User entered 38400
+[2019-09-18 17:53:38,848] INFO run:122:set_current_dis: Enter discharge current
+[2019-09-18 17:53:40,293] INFO run:129:set_current_dis: Discharge current is 32
+[2019-09-18 17:53:40,294] INFO run:135:set_bat_name: Enter the battery name
+[2019-09-18 17:53:48,460] INFO run:141:set_bat_name: Battery name is Energizer CR2
+[2019-09-18 17:53:48,461] INFO run:148:db_init: DB name: Energizer CR2 1568818428.4618394
+[2019-09-18 17:53:48,462] INFO db:14:init_db: Init db <Energizer CR2 1568818428.4618394>: successfully
+[2019-09-18 17:53:48,462] INFO db:21:init_db: Create cursor for db <Energizer CR2 1568818428.4618394>: successfully
+[2019-09-18 17:53:48,463] INFO run:151:db_init: DB_conn: <sqlite3.Connection object at 0x0000017C39DAE490>
+DB_cursor: <sqlite3.Cursor object at 0x0000017C3A16F730>
+[2019-09-18 17:53:48,649] INFO db:46:create_table_head_data_in_db: Create table <head_data>: successfully
+[2019-09-18 17:53:48,780] INFO db:62:create_table_in_db: Create table <battery_data>: successfully
+[2019-09-18 17:53:48,780] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:48,782] INFO db:77:insert_into_head_data: Insert in table <head_data> Energizer CR2 32 1568818428.7802472 2019-09-18 17:53:48.780247: successfully
+[2019-09-18 17:53:48,782] INFO db:109:select_from_db: Select * from table head_data: successfully
+[2019-09-18 17:53:48,928] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:48,928] INFO lib_serial:28:connect_to_port: Try connect to serial port COM13
+[2019-09-18 17:53:48,945] INFO lib_serial:40:connect_to_port: Connect to Serial-port:  OK
+[2019-09-18 17:53:48,946] INFO lib_serial:84:go_go: Run
+[2019-09-18 17:53:48,960] INFO db:14:init_db: Init db <Energizer CR2 1568818428.4618394>: successfully
+[2019-09-18 17:53:48,960] INFO db:21:init_db: Create cursor for db <Energizer CR2 1568818428.4618394>: successfully
+[2019-09-18 17:53:48,960] INFO lib_serial:90:run: Thread was run
+[2019-09-18 17:53:49,768] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:51,645] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:53,534] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:54,091] INFO run:217:cmd_run: Enter command -> read_db
+[2019-09-18 17:53:54,091] INFO db:109:select_from_db: Select * from table battery_data: successfully
+[2019-09-18 17:53:55,435] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:57,439] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:59,145] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:53:59,357] INFO run:217:cmd_run: Enter command -> capacity
+[2019-09-18 17:53:59,358] INFO db:109:select_from_db: Select volt from table battery_data: successfully
+[2019-09-18 17:54:01,035] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:03,018] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:04,804] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:06,738] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:08,538] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:10,449] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:12,345] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:14,204] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:16,100] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:18,237] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:19,993] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:21,893] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:24,037] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:25,614] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:27,426] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:29,299] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:31,592] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:33,325] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:35,464] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:36,993] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:38,870] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:40,537] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:42,373] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:44,377] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:46,235] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:48,089] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:49,969] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:51,985] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:54,588] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:55,547] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:57,413] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:54:59,365] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:01,231] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:03,100] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:04,957] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:06,868] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:08,746] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:10,619] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:12,580] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:14,398] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:16,258] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:18,320] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:20,080] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:22,289] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:23,740] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:25,600] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:27,564] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:29,378] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:31,267] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:33,210] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:35,033] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:37,205] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:38,811] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:40,644] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:42,604] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:44,385] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:46,310] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:48,240] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:50,033] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:51,911] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:53,832] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:55,699] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:57,624] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:55:59,539] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:01,366] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:03,261] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:05,106] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:06,977] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:08,943] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:10,815] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:12,621] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:14,495] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:16,353] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:18,409] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:20,231] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:22,249] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:23,976] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:25,971] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:27,716] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:29,654] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:31,580] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:33,398] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:35,297] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:37,341] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:39,341] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:40,941] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:43,152] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:44,596] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:46,496] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:48,466] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:50,174] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:52,148] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:54,163] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:55,874] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:57,752] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:56:59,652] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:01,463] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:03,373] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:05,258] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:07,336] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:09,062] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:10,970] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:12,781] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:14,624] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:16,584] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:18,383] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:20,290] INFO db:133:commit_changes: Commit: successfully
+[2019-09-18 17:57:22,339] INFO db:133:commit_changes: Commit: successfully
