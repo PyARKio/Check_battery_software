@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 from __future__ import unicode_literals
 import sqlite3
+from Drivers.log_settings import log
 
 
 def init_db(name_db):
@@ -8,7 +9,7 @@ def init_db(name_db):
         conn = sqlite3.connect('{}.db'.format(name_db))  # или :memory: чтобы сохранить в RAM
     except Exception as err:
         print(err)
-        return 0
+        return False, False
     else:
         cursor = conn.cursor()
         return conn, cursor
@@ -32,7 +33,10 @@ def create_table_head_data_in_db(cursor):
                        "start_at_in_sec timestamp, "
                        "start_at_in_date timestamp);")
     except Exception as err:
-        print('Error while creating PostgreSQL table: {}'.format(err))
+        log.error(err)
+        return False
+    else:
+        return True
 
 
 def create_table_in_db(cursor):
@@ -44,38 +48,63 @@ def create_table_in_db(cursor):
                        "time_in_date timestamp, "
                        "volt varchar);")
     except Exception as err:
-        print('Error while creating PostgreSQL table: {}'.format(err))
+        log.error(err)
+        return False
+    else:
+        return True
 
 
 def insert_into_head_data(cursor, bat_name, dis, in_sec, in_date):
     # Pass data to fill a query placeholders and let Psycopg perform
     # the correct conversion (no more SQL injections!)
     # cursor.execute("INSERT INTO test_db (num, data) VALUES (%s, %s)", (123478, "passwd"))
-    cursor.execute("INSERT INTO head_data ("
-                   "battery_name, "
-                   "discharge_current, "
-                   "start_at_in_sec, "
-                   "start_at_in_date) VALUES(?, ?, ?, ?)", (bat_name, str(dis), in_sec, in_date))
+    try:
+        cursor.execute("INSERT INTO head_data ("
+                       "battery_name, "
+                       "discharge_current, "
+                       "start_at_in_sec, "
+                       "start_at_in_date) VALUES(?, ?, ?, ?)", (bat_name, str(dis), in_sec, in_date))
+    except Exception as err:
+        log.error(err)
+        return False
+    else:
+        return True
 
 
 def insert_into_db(cursor, in_sec, in_date, volt):
     # Pass data to fill a query placeholders and let Psycopg perform
     # the correct conversion (no more SQL injections!)
     # cursor.execute("INSERT INTO test_db (num, data) VALUES (%s, %s)", (123478, "passwd"))
-    cursor.execute("INSERT INTO battery_data ("
-                   "time_sec, "
-                   "time_in_date, "
-                   "volt) VALUES(?, ?, ?)", (in_sec, in_date, volt))
+    try:
+        cursor.execute("INSERT INTO battery_data ("
+                       "time_sec, "
+                       "time_in_date, "
+                       "volt) VALUES(?, ?, ?)", (in_sec, in_date, volt))
+    except Exception as err:
+        log.error(err)
+        return False
+    else:
+        return True
 
 
 def select_from_db(cursor, name_table_in_db, param='*'):
     # Query the database and obtain data as Python objects
-    cursor.execute("SELECT {} FROM {};".format(param, name_table_in_db))
-    data = cursor.fetchall()
-    print(len(data))
+    try:
+        cursor.execute("SELECT {} FROM {};".format(param, name_table_in_db))
+    except Exception as err:
+        log.error(err)
+        return False
+    else:
+        try:
+            data = cursor.fetchall()
+        except Exception as err:
+            log.error(err)
+            return False
+        else:
+            print(len(data))
 
-    for line in data:
-        print(line)
+            for line in data:
+                print(line)
 
 
 def delete_from_table_in_db(cursor, name_table_in_db, key, value):
@@ -86,7 +115,13 @@ def delete_from_table_in_db(cursor, name_table_in_db, key, value):
 
 def commit_changes(conn):
     # Make the changes to the database persistent
-    conn.commit()
+    try:
+        conn.commit()
+    except Exception as err:
+        log.error(err)
+        return False
+    else:
+        return True
 
 
 def disconnect_from_db(conn, cursor):
@@ -95,8 +130,11 @@ def disconnect_from_db(conn, cursor):
     print("PostgreSQL connection is closed")
 
 
-def select_all_table():
+def select_all_table(cursor):
     cursor.execute("""SELECT table_name FROM information_schema.tables
            WHERE table_schema = 'public'""")
     for table in cursor.fetchall():
         print(table)
+
+
+

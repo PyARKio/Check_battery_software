@@ -23,6 +23,7 @@ baud = 38400
 
 class CheckBatteryCapacity(object):
     def __init__(self):
+        log.info('__init__')
         self.__cmd_run = True
 
         self.flag_set_com = True
@@ -90,60 +91,69 @@ class CheckBatteryCapacity(object):
 
     def set_com_port(self):
         while self.flag_set_com:
+            log.info('Enter the com port')
             data = input('Enter the com port: ')
 
             if data.isalpha():
-                print('Uncorrect com port number !\nYou may enter only digits !\nTry again')
+                log.info('Uncorrect com port number !\nYou may enter only digits !\nTry again')
             elif data.isdigit():
                 self.port = 'COM{}'.format(data)
-                print(self.port)
+                log.info('User entered {}'.format(self.port))
                 self.flag_set_com = False
             else:
-                print('Somthing was wrong !\nTry again')
+                log.info('Something was wrong !\nTry again')
 
     def set_baud(self):
         while self.flag_set_baud:
+            log.info('Enter the baud')
             data = input('Enter the baud: ')
 
             if data.isalpha():
-                print('Uncorrect baud !\nYou may enter only digits !\nTry again')
+                log.info('Uncorrect baud !\nYou may enter only digits !\nTry again')
             elif data.isdigit():
                 self.baud = data
-                print(self.baud)
+                log.info('User entered {}'.format(self.baud))
                 self.flag_set_baud = False
             else:
-                print('Somthing was wrong !\nTry again')
+                log.info('Somthing was wrong !\nTry again')
 
     def set_current_dis(self):
         while self.flag_set_current_dis:
+            log.info('Enter discharge current')
             data = input('Enter discharge current: ')
 
             if data.isalpha():
-                print('Uncorrect discharge current !\nYou may enter only digits !\nTry again')
+                log.info('Uncorrect discharge current !\nYou may enter only digits !\nTry again')
             elif data.isdigit():
                 self.discharge_current = data
-                print(self.discharge_current)
+                log.info('Discharge current is {}'.format(self.discharge_current))
                 self.flag_set_current_dis = False
             else:
-                print('Somthing was wrong !\nTry again')
+                log.info('Somthing was wrong !\nTry again')
 
     def set_bat_name(self):
+        log.info('Enter the battery name')
         while self.flag_set_bat_name:
             data = input('Enter the battery name: ')
 
             if data:
                 self.battery_name = data
-                print(self.battery_name)
+                log.info('Battery name is {}'.format(self.battery_name))
                 self.flag_set_bat_name = False
             else:
-                print('Somthing was wrong !\nTry again')
+                log.info('Somthing was wrong !\nTry again')
 
     def db_init(self):
         self.db_name = '{} {}'.format(self.battery_name, time.time())
+        log.info('DB name: {}'.format(self.db_name))
+
         self.db_conn, self.db_cursor = db.init_db(self.db_name)
-        db.create_table_head_data_in_db(self.db_cursor)
-        db.create_table_in_db(self.db_cursor)
-        db.commit_changes(self.db_conn)
+        log.info('DB_conn: {}\nDB_cursor: {}'.format(self.db_conn, self.db_cursor))
+
+        if self.db_conn and self.db_cursor:
+            db.create_table_head_data_in_db(self.db_cursor)
+            db.create_table_in_db(self.db_cursor)
+            db.commit_changes(self.db_conn)
 
     def db_head_data(self):
         db.insert_into_head_data(self.db_cursor, self.battery_name, self.discharge_current, time.time(), datetime.now())
