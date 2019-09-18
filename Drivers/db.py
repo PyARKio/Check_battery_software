@@ -63,9 +63,9 @@ def insert_into_db(cursor, in_sec, in_date, volt):
     # the correct conversion (no more SQL injections!)
     # cursor.execute("INSERT INTO test_db (num, data) VALUES (%s, %s)", (123478, "passwd"))
     cursor.execute("INSERT INTO battery_data ("
-                   "time_sec varchar, "
-                   "time_in_date varchar, "
-                   "volt varchar) VALUES(?, ?, ?)", (in_sec, in_date, volt))
+                   "time_sec, "
+                   "time_in_date, "
+                   "volt) VALUES(?, ?, ?)", (in_sec, in_date, volt))
 
 
 def select_from_db(cursor, name_table_in_db, param='*'):

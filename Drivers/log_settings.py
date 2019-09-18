@@ -13,7 +13,7 @@ __status__ = "Production"
 
 trace_pattern = logging.Formatter("[%(asctime)s] %(levelname)s %(module)s:%(lineno)d:%(funcName)s: %(message)s")
 
-file_handler = logging.handlers.RotatingFileHandler('/home/user/check_service_status.log', 'a', 10 * 1024 * 1024, 10)
+file_handler = logging.handlers.RotatingFileHandler('check_service_status.log', 'a', 10 * 1024 * 1024, 10)
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(trace_pattern)
 

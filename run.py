@@ -4,7 +4,7 @@ import sys
 import serial
 import time
 from datetime import datetime
-# from Drivers.log_settings import log
+from Drivers.log_settings import log
 from Drivers.lib_serial import SerialStart
 from Drivers.lib_serial import Thread4Serial
 from Drivers import db
@@ -15,7 +15,7 @@ __version__ = "1.0.1"
 __email__ = "fedoretss@gmail.com"
 __status__ = "Production"
 
-# log.info('Starting of check_battery_capacity')
+log.info('Starting of check_battery_capacity')
 
 port = 'COM13'
 baud = 38400
@@ -204,21 +204,21 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    # print(sys.version)
-    # con = CheckBatteryCapacity()
-    # con.set_com_port()
-    # con.set_baud()
-    # con.set_current_dis()
-    # con.set_bat_name()
-    # con.db_init()
-    # con.db_head_data()
-    # con.serial_connect()
-    # # con.serial_disconnect()
-    # con.cmd_run()
-    #
-    # print('SYSTEM STOP')
-    # sys.exit(0)
+    # main()
+    print(sys.version)
+    con = CheckBatteryCapacity()
+    con.set_com_port()
+    con.set_baud()
+    con.set_current_dis()
+    con.set_bat_name()
+    con.db_init()
+    con.db_head_data()
+    con.serial_connect()
+    # con.serial_disconnect()
+    con.cmd_run()
+
+    print('SYSTEM STOP')
+    sys.exit(0)
 
 
 
