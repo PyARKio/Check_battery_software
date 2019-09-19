@@ -229,11 +229,9 @@ class CheckBatteryCapacity(object):
                 data = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='volt')
                 if not data:
                     print('Can not select from table <battery_data>')
-                    self.serial_disconnect()
-                    log.info('SYSTEM STOP')
-                    sys.exit(0)
-
-
+                    # self.serial_disconnect()
+                    # log.info('SYSTEM STOP')
+                    # sys.exit(0)
 
 
 def main():

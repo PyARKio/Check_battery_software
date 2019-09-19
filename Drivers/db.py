@@ -8,6 +8,7 @@ def init_db(name_db):
     try:
         conn = sqlite3.connect('{}.db'.format(name_db))  # или :memory: чтобы сохранить в RAM
     except Exception as err:
+        print(err)
         log.error(err)
         return False, False
     else:
@@ -15,6 +16,7 @@ def init_db(name_db):
         try:
             cursor = conn.cursor()
         except Exception as err:
+            print(err)
             log.error(err)
             return False, False
         else:
@@ -141,10 +143,16 @@ def disconnect_from_db(conn, cursor):
 
 
 def select_all_table(cursor):
-    cursor.execute("""SELECT table_name FROM information_schema.tables
-           WHERE table_schema = 'public'""")
-    for table in cursor.fetchall():
-        print(table)
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    print(cursor.fetchall())
 
 
+if __name__ == '__main__':
+    db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\Energizer CR2 1568818428.4618394')
+    # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
+    # select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
+    # select_from_db(db_cursor, name_table_in_db='head_data')
+    select_from_db(db_cursor, name_table_in_db='sqlite_sequence')
+    select_all_table(db_cursor)
+    disconnect_from_db(db_conn, db_cursor)
 
