@@ -101,7 +101,7 @@ class Thread4Serial(threading.Thread):
                 else:
                     if self._print:
                         print('{} {}'.format(datetime.now(), data))
-                    # self.__handler(data)
+                    self.__handler(data)
                     if 'V' in data:
                         if not db.insert_into_db(self.db_cursor, time.time(), datetime.now(), int(data.split('V')[1])):
                             print('Can not insert in db {} {} {}'.

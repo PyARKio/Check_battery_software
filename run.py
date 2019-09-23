@@ -45,6 +45,10 @@ class CheckBatteryCapacity(object):
         self.db_cursor = None
         self.db_name = None
 
+        self.start = None
+        self.stop = None
+        self.volt = None
+
         # self.commands = {'exit': Command_handler._handler_exit,
         #                  '-q': Command_handler._handler_exit,
         #
@@ -85,10 +89,20 @@ class CheckBatteryCapacity(object):
 
     # ******************************************
     def call_back_from_serial(self, data):
-        pass
+        # pass
         # print('DATA from serial:\n{}'.format(data))
-        # if 'V' in data:
-        #     db.insert_into_db(self.db_cursor, time.time(), datetime.now(), data.split('V')[1])
+        if 'V' in data:
+            # db.insert_into_db(self.db_cursor, time.time(), datetime.now(), data.split('V')[1])
+            if int(data.split('V')[1]) != 0:
+                self.volt = data.split('V')[1]
+            else:
+                print('END !!!')
+                self.stop = time.time()
+                delta_3600 = (int(self.stop) - int(self.start)) / 3600
+                print('{} sec'.format(int(self.stop) - int(self.start)))
+                print('{} hours'.format(delta_3600))
+                print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                print('{} V'.format(self.volt))
     # ******************************************
 
     def set_com_port(self):
@@ -221,6 +235,32 @@ class CheckBatteryCapacity(object):
             if data_cmd == 'exit':
                 self.serial_disconnect()
                 self.__cmd_run = False
+                self.stop = time.time()
+                delta_3600 = (int(self.stop) - int(self.start)) / 3600
+                print('{} sec'.format(int(self.stop) - int(self.start)))
+                print('{} hours'.format(delta_3600))
+                print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                print('{} V'.format(self.volt))
+            elif data_cmd == 'start':
+                self.start = time.time()
+                self.stop = None
+            elif data_cmd == 'stop':
+                self.stop = time.time()
+            elif data_cmd == 'stat':
+                if self.start and self.stop is None:
+                    delta_3600 = (int(time.time()) - int(self.start)) / 3600
+                    print('{} sec'.format(int(time.time()) - int(self.start)))
+                    print('{} hours'.format(delta_3600))
+                    print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                    print('{} V'.format(self.volt))
+                elif self.start and self.stop:
+                    delta_3600 = (int(self.stop) - int(self.start)) / 3600
+                    print('{} sec'.format(int(self.stop) - int(self.start)))
+                    print('{} hours'.format(delta_3600))
+                    print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                    print('{} V'.format(self.volt))
+                else:
+                    print('Measurement not started')
             elif data_cmd == 'read_db':
                 db.select_from_db(self.db_cursor, name_table_in_db='battery_data')
             elif data_cmd == 'start print':
@@ -234,24 +274,24 @@ class CheckBatteryCapacity(object):
                     # self.serial_disconnect()
                     # log.info('SYSTEM STOP')
                     # sys.exit(0)
-            elif data_cmd == 'plot':
-                volt = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='volt')
-                time = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='"time_in_date')
-                plot_start = Process(target=one_plot,
-                                     args=(self.work_object.table_of_handlers[sType].
-                                           sensors_temperature_status[str(sensors[ins])],
-                                           params['type_data'].upper(),
-                                           # 'time' if params.get('datetime_mode') is None else params['datetime_mode'],
-                                           # str(sensors[ins]),
-                                           # False if params.get('grid') is None else params['grid'],
-                                           # 'line' if params.get('type_plot') is None else params['type_plot'],
-                                           # 'cornflowerblue' if params.get('color') is None else params['color'],
-                                           # '-' if params.get('linestyle') is None else params['linestyle'],
-                                           # 2 if params.get('linewidth') is None else params['linewidth'],
-                                           # False if params.get('save_fig') is None else params['save_fig'],
-
-                                           ))
-                plot_start.start()
+            # elif data_cmd == 'plot':
+            #     volt = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='volt')
+            #     time = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='"time_in_date')
+            #     plot_start = Process(target=one_plot,
+            #                          args=(self.work_object.table_of_handlers[sType].
+            #                                sensors_temperature_status[str(sensors[ins])],
+            #                                params['type_data'].upper(),
+            #                                # 'time' if params.get('datetime_mode') is None else params['datetime_mode'],
+            #                                # str(sensors[ins]),
+            #                                # False if params.get('grid') is None else params['grid'],
+            #                                # 'line' if params.get('type_plot') is None else params['type_plot'],
+            #                                # 'cornflowerblue' if params.get('color') is None else params['color'],
+            #                                # '-' if params.get('linestyle') is None else params['linestyle'],
+            #                                # 2 if params.get('linewidth') is None else params['linewidth'],
+            #                                # False if params.get('save_fig') is None else params['save_fig'],
+            #
+            #                                ))
+            #     plot_start.start()
 
 
 def main():
