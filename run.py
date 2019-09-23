@@ -8,6 +8,8 @@ from Drivers.log_settings import log
 from Drivers.lib_serial import SerialStart
 from Drivers.lib_serial import Thread4Serial
 from Drivers import db
+from Drivers import build_curves
+from multiprocessing import Process
 
 
 __author__ = "PyARKio"
@@ -232,6 +234,24 @@ class CheckBatteryCapacity(object):
                     # self.serial_disconnect()
                     # log.info('SYSTEM STOP')
                     # sys.exit(0)
+            elif data_cmd == 'plot':
+                volt = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='volt')
+                time = db.select_from_db(self.db_cursor, name_table_in_db='battery_data', param='"time_in_date')
+                plot_start = Process(target=one_plot,
+                                     args=(self.work_object.table_of_handlers[sType].
+                                           sensors_temperature_status[str(sensors[ins])],
+                                           params['type_data'].upper(),
+                                           # 'time' if params.get('datetime_mode') is None else params['datetime_mode'],
+                                           # str(sensors[ins]),
+                                           # False if params.get('grid') is None else params['grid'],
+                                           # 'line' if params.get('type_plot') is None else params['type_plot'],
+                                           # 'cornflowerblue' if params.get('color') is None else params['color'],
+                                           # '-' if params.get('linestyle') is None else params['linestyle'],
+                                           # 2 if params.get('linewidth') is None else params['linewidth'],
+                                           # False if params.get('save_fig') is None else params['save_fig'],
+
+                                           ))
+                plot_start.start()
 
 
 def main():

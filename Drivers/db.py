@@ -148,9 +148,17 @@ def select_all_table(cursor):
 
 
 if __name__ == '__main__':
-    db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\Energizer CR2 1568818428.4618394')
+    db_conn, db_cursor = init_db('d:\Check_battery_software\Energizer CR2 1568818428.4618394')
     # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
-    # select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
+    volt = select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
+    print(volt[0])
+    print(volt[-1])
+    data_time = select_from_db(db_cursor, name_table_in_db='battery_data', param='time_sec')
+    print(data_time[0])
+    print(data_time[-1])
+    delta_3600 = (int(data_time[-1][0]) - int(data_time[0][0])) / 3600
+    print(delta_3600)
+    print(delta_3600 * 32)
     # select_from_db(db_cursor, name_table_in_db='head_data')
     select_from_db(db_cursor, name_table_in_db='sqlite_sequence')
     select_all_table(db_cursor)
