@@ -69,7 +69,7 @@ class Thread4Serial(threading.Thread):
         self._running = True
         self.__handler = callback_handler
         self.serial_port = serial_port_as_obj
-        self._pause = False
+        self._pause = True
         self._print = False
 
         self.db_conn = None
@@ -99,17 +99,21 @@ class Thread4Serial(threading.Thread):
                 except Exception as err:
                     log.error('Can not decode in "ascii" {}'.format(err))
                 else:
-                    if self._print:
-                        print('{} {}'.format(datetime.now(), data))
-                    self.__handler(data)
-                    if 'V' in data:
-                        if not db.insert_into_db(self.db_cursor, time.time(), datetime.now(), int(data.split('V')[1])):
-                            print('Can not insert in db {} {} {}'.
-                                  format(time.time(), datetime.now(), int(data.split('V')[1])))
-                            sys.exit(0)
-                        if not db.commit_changes(self.db_conn):
-                            print('Can not commit')
-                            sys.exit(0)
+                    if not self._pause:
+                        # print('not pause')
+                        if self._print:
+                            print('{} {}'.format(datetime.now(), data))
+                        self.__handler(data)
+                        if 'V' in data:
+                            if not db.insert_into_db(self.db_cursor, time.time(), datetime.now(), int(data.split('V')[1])):
+                                print('Can not insert in db {} {} {}'.
+                                      format(time.time(), datetime.now(), int(data.split('V')[1])))
+                                sys.exit(0)
+                            if not db.commit_changes(self.db_conn):
+                                print('Can not commit')
+                                sys.exit(0)
+                    # else:
+                    #     print('pause')
 
 
 

@@ -31,9 +31,10 @@ def _handler_xticks(Value, datetime_mode):
     if datetime_mode == 'time':
         xLabel = 'Time'
         xValue = list()
+        # print(Value)
         for number, time in enumerate(Value):
             if number % step == 0:
-                xValue.append(time.split(' ')[1])
+                xValue.append(str(time).split(' ')[1])
             else:
                 xValue.append(str())
     else:
@@ -50,29 +51,30 @@ def _handler_xticks(Value, datetime_mode):
 
 def one_plot(Value, yLabel=None, datetime_mode='time', sensor_name='Unknown', grid_mode=False, type_plot='line',
              color='cornflowerblue', linestyle='-', linewidth=2, save_fig=True):
-
+    print(1)
     xValue, xLabel, pattern_for_mask = _handler_xticks(Value[1], datetime_mode)
     yValue = Value[0]
-
+    print(2)
     fig, axs = plt.subplots()
-
+    print(3)
     if type_plot == 'line':
         axs.plot(pattern_for_mask, yValue, linestyle=linestyle, color=color, linewidth=linewidth)
     elif type_plot == 'hist':
         axs.hist(pattern_for_mask, density=1, linestyle=linestyle, color=color, linewidth=linewidth)
         # axs.plot(bins, linestyle=linestyle, color=color, linewidth=linewidth)
-
+    print(4)
     axs.set_xlabel(xLabel if xLabel else 'default X')
     axs.set_ylabel(yLabel if yLabel else 'default Y')
     axs.grid(grid_mode)
-
+    print(5)
     plt.xticks(pattern_for_mask, xValue, rotation='vertical')
     plt.title(str(sensor_name))
-
+    print(6)
     fig.tight_layout()
     if save_fig:
+        print(7)
         plt.savefig('D:\\{}_{}_{}.png'.format(sensor_name, yLabel, time.time()), dpi=1200)
-
+    print(8)
     plt.show(block=True)
     # plt.draw()
 

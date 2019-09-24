@@ -48,6 +48,7 @@ class CheckBatteryCapacity(object):
         self.start = None
         self.stop = None
         self.volt = None
+        self.flag_end = False
 
         # self.commands = {'exit': Command_handler._handler_exit,
         #                  '-q': Command_handler._handler_exit,
@@ -93,16 +94,19 @@ class CheckBatteryCapacity(object):
         # print('DATA from serial:\n{}'.format(data))
         if 'V' in data:
             # db.insert_into_db(self.db_cursor, time.time(), datetime.now(), data.split('V')[1])
-            if int(data.split('V')[1]) != 0:
+            if int(data.split('V')[1]) != 0 and not self.flag_end:
                 self.volt = data.split('V')[1]
             else:
-                print('END !!!')
-                self.stop = time.time()
-                delta_3600 = (int(self.stop) - int(self.start)) / 3600
-                print('{} sec'.format(int(self.stop) - int(self.start)))
-                print('{} hours'.format(delta_3600))
-                print('{} mA'.format(delta_3600 * int(self.discharge_current)))
-                print('{} V'.format(self.volt))
+                if self.start and not self.flag_end:
+                    self.flag_end = True
+                    self.thread_for_serial._pause = True
+                    print('END !!!')
+                    self.stop = time.time()
+                    delta_3600 = (int(self.stop) - int(self.start)) / 3600
+                    print('{} sec'.format(int(self.stop) - int(self.start)))
+                    print('{} hours'.format(delta_3600))
+                    print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                    print('{} V'.format(self.volt))
     # ******************************************
 
     def set_com_port(self):
@@ -236,16 +240,19 @@ class CheckBatteryCapacity(object):
                 self.serial_disconnect()
                 self.__cmd_run = False
                 self.stop = time.time()
-                delta_3600 = (int(self.stop) - int(self.start)) / 3600
-                print('{} sec'.format(int(self.stop) - int(self.start)))
-                print('{} hours'.format(delta_3600))
-                print('{} mA'.format(delta_3600 * int(self.discharge_current)))
-                print('{} V'.format(self.volt))
+                if self.start:
+                    delta_3600 = (int(self.stop) - int(self.start)) / 3600
+                    print('{} sec'.format(int(self.stop) - int(self.start)))
+                    print('{} hours'.format(delta_3600))
+                    print('{} mA'.format(delta_3600 * int(self.discharge_current)))
+                    print('{} V'.format(self.volt))
             elif data_cmd == 'start':
                 self.start = time.time()
                 self.stop = None
+                self.thread_for_serial._pause = False
             elif data_cmd == 'stop':
                 self.stop = time.time()
+                self.thread_for_serial._pause = True
             elif data_cmd == 'stat':
                 if self.start and self.stop is None:
                     delta_3600 = (int(time.time()) - int(self.start)) / 3600

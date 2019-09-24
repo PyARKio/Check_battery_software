@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 import sqlite3
 from Drivers.log_settings import log
+from multiprocessing import Process
+from Drivers.build_curves import one_plot
 
 
 def init_db(name_db):
@@ -90,6 +92,10 @@ def insert_into_db(cursor, in_sec, in_date, volt):
         log.error(err)
         return False
     else:
+        log.info("INSERT INTO battery_data ("
+                 "time_sec, "
+                 "time_in_date, "
+                 "volt) VALUES({}, {}, {})".format(in_sec, in_date, volt))
         return True
 
 
@@ -110,7 +116,7 @@ def select_from_db(cursor, name_table_in_db, param='*'):
         else:
             log.info('Select {} from table {}: successfully'.format(param, name_table_in_db))
             print(len(data))
-            print(data)
+            # print(data)
 
             # for line in data:
             #     print(line)
@@ -148,7 +154,7 @@ def select_all_table(cursor):
 
 
 if __name__ == '__main__':
-    db_conn, db_cursor = init_db('d:\Check_battery_software\Energizer CR2 1568818428.4618394')
+    db_conn, db_cursor = init_db('d:\qua\Check_battery_software\Energizer CR2 1568818428.4618394')
     # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
     volt = select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
     print(volt[0])
@@ -159,8 +165,19 @@ if __name__ == '__main__':
     delta_3600 = (int(data_time[-1][0]) - int(data_time[0][0])) / 3600
     print(delta_3600)
     print(delta_3600 * 32)
+    data_time = select_from_db(db_cursor, name_table_in_db='battery_data', param='time_in_date')
     # select_from_db(db_cursor, name_table_in_db='head_data')
     select_from_db(db_cursor, name_table_in_db='sqlite_sequence')
     select_all_table(db_cursor)
     disconnect_from_db(db_conn, db_cursor)
+
+    # plot_start = Process(target=one_plot, args=([volt, data_time], 'VOLT'))
+    # plot_start.start()
+
+    one_plot([volt, data_time], yLabel='VOLT')
+
+    import time
+
+    time.sleep(50)
+
 
