@@ -102,6 +102,7 @@ def insert_into_db(cursor, in_sec, in_date, volt):
 def select_from_db(cursor, name_table_in_db, param='*'):
     try:
         cursor.execute("SELECT {} FROM {};".format(param, name_table_in_db))
+        # cursor.execute("SELECT {} FROM {} WHERE volt > 2400;".format(param, name_table_in_db))
     except Exception as err:
         print(err)
         log.error(err)
@@ -154,11 +155,13 @@ def select_all_table(cursor):
 
 
 if __name__ == '__main__':
-    db_conn, db_cursor = init_db('d:\qua\Check_battery_software\Energizer CR2 1568818428.4618394')
+    name = 'Energizer CR2 1569313216.572497'
+    # db_conn, db_cursor = init_db('d:\qua\Check_battery_software\Energizer CR2 1568818428.4618394')
+    db_conn, db_cursor = init_db('d:\qua\Check_battery_software\{}'.format(name))
     # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
     volt = select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
-    print(volt[0])
-    print(volt[-1])
+    print(volt[0][0])
+    print(volt[-1][0])
     data_time = select_from_db(db_cursor, name_table_in_db='battery_data', param='time_sec')
     print(data_time[0])
     print(data_time[-1])
@@ -174,10 +177,12 @@ if __name__ == '__main__':
     # plot_start = Process(target=one_plot, args=([volt, data_time], 'VOLT'))
     # plot_start.start()
 
-    one_plot([volt, data_time], yLabel='VOLT')
+    one_plot([volt, data_time], yLabel='VOLT', sensor_name='{} {} {}mA'.format(name.split(' ')[0],
+                                                                               name.split(' ')[1],
+                                                                               delta_3600 * 32))
 
-    import time
+    # import time
 
-    time.sleep(50)
+    # time.sleep(50)
 
 

@@ -1,8 +1,12 @@
 # -- coding: utf-8 --
 from __future__ import unicode_literals
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.engine.url import URL
 
 
 __author__ = "PyARKio"
@@ -11,53 +15,82 @@ __email__ = "fedoretss@gmail.com"
 __status__ = "Production"
 
 
-engine = create_engine("sqlite:///some.db")
+# ******* POSTGRES ********
+db_url = {'drivername': 'postgres',
+          'database': 'data_db',
+          'username': 'postgres',
+          'password': 'superdyatel',
+          'host': 'localhost',
+          'port': 5432}
+engine = create_engine(URL(**db_url))
+
+# ******* SQLite **********
+# engine = create_engine("sqlite:///some.db")
 
 Base = declarative_base()
-session = scoped_session(sessionmaker(class_=, autocommit=False))
-Base.query = session.query_property()
 
 
-# # Session = sessionmaker(bind=engine)
-#
-# engine.execute("""
-#     create table employee (
-#         emp_id integer primary key,
-#         emp_name varchar
-#     )
-# """)
-#
-# engine.execute("""
-#     create table employee_of_month (
-#         emp_id integer primary key,
-#         emp_name varchar
-#     )
-# """)
-#
-# engine.execute("""insert into employee(emp_name) values ('ed')""")
-# engine.execute("""insert into employee(emp_name) values ('jack')""")
-# engine.execute("""insert into employee(emp_name) values ('fred')""")
+class TestTable(Base):
+    __tablename__ = 'Test Table'
+    id = Column(Integer, primary_key=True)
+    key = Column(String, nullable=False)
+    val = Column(String)
+    date = Column(DateTime, default=datetime.utcnow)
 
 
-# from sqlalchemy import create_engine
-# from sqlalchemy import MetaData
-# from sqlalchemy import Table
-# from sqlalchemy import Column
-# from sqlalchemy import Integer, String
-#
-# db_uri = 'sqlite:///db.sqlite'
-# engine = create_engine(db_uri)
-#
-# # Create a metadata instance
-# metadata = MetaData(engine)
-# # Declare a table
-# table = Table('Example', metadata,
-#               Column('id', Integer, primary_key=True),
-#               Column('name', String))
-# # Create all tables
-# metadata.create_all()
-# for _t in metadata.tables:
-#     print("Table: ", _t)
+# create tables
+Base.metadata.create_all(bind=engine)
+
+# create session
+Session = sessionmaker()
+Session.configure(bind=engine)
+session = Session()
+
+
+data = {'a': 5566, 'b': 9527, 'c': 183}
+try:
+    for _key, _val in data.items():
+        row = TestTable(key=_key, val=_val)
+        session.add(row)
+    session.commit()
+except SQLAlchemyError as e:
+    print(e)
+# finally:
+#     session.close()
+
+
+try:
+    # add row to database
+    row = TestTable(key="hello", val="world")
+    session.add(row)
+    session.commit()
+
+    # update row to database
+    row = session.query(TestTable).filter(
+          TestTable.key == 'hello').first()
+    print('original:', row.key, row.val, row.id, row.date)
+    row.key = "Hello"
+    row.val = "World"
+    session.commit()
+
+    # check update correct
+    row = session.query(TestTable).filter(
+          TestTable.key == 'Hello').first()
+    print('update:', row.key, row.val)
+
+    row = session.query(TestTable).filter(
+        TestTable.key == 'a').first()
+    print('original:', row.key, row.val, row.id, row.date)
+
+    # rows = session.query(TestTable).filter(
+    #     TestTable.key == 'Hello').all()
+    rows = session.query(TestTable).all()
+    for row in rows:
+        print('ALL:', row.key, row.val, row.id, row.date)
+except SQLAlchemyError as e:
+    print(e)
+finally:
+    session.close()
 
 
 

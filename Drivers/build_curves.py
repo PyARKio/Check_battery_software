@@ -75,7 +75,7 @@ def one_plot(Value, yLabel=None, datetime_mode='time', sensor_name='Unknown', gr
         print(7)
         plt.savefig('D:\\{}_{}_{}.png'.format(sensor_name, yLabel, time.time()), dpi=1200)
     print(8)
-    plt.show(block=True)
+    # plt.show(block=True)
     # plt.draw()
 
 

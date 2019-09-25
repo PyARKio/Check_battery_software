@@ -94,7 +94,7 @@ class CheckBatteryCapacity(object):
         # print('DATA from serial:\n{}'.format(data))
         if 'V' in data:
             # db.insert_into_db(self.db_cursor, time.time(), datetime.now(), data.split('V')[1])
-            if int(data.split('V')[1]) != 0 and not self.flag_end:
+            if int(data.split('V')[1]) > 2450 and not self.flag_end:
                 self.volt = data.split('V')[1]
             else:
                 if self.start and not self.flag_end:
