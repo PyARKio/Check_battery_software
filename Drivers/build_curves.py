@@ -51,31 +51,29 @@ def _handler_xticks(Value, datetime_mode):
 
 def one_plot(Value, yLabel=None, datetime_mode='time', sensor_name='Unknown', grid_mode=False, type_plot='line',
              color='cornflowerblue', linestyle='-', linewidth=2, save_fig=True):
-    print(1)
+
     xValue, xLabel, pattern_for_mask = _handler_xticks(Value[1], datetime_mode)
     yValue = Value[0]
-    print(2)
+
     fig, axs = plt.subplots()
-    print(3)
     if type_plot == 'line':
         axs.plot(pattern_for_mask, yValue, linestyle=linestyle, color=color, linewidth=linewidth)
     elif type_plot == 'hist':
         axs.hist(pattern_for_mask, density=1, linestyle=linestyle, color=color, linewidth=linewidth)
         # axs.plot(bins, linestyle=linestyle, color=color, linewidth=linewidth)
-    print(4)
+
     axs.set_xlabel(xLabel if xLabel else 'default X')
     axs.set_ylabel(yLabel if yLabel else 'default Y')
     axs.grid(grid_mode)
-    print(5)
+
     plt.xticks(pattern_for_mask, xValue, rotation='vertical')
     plt.title(str(sensor_name))
-    print(6)
+
     fig.tight_layout()
     if save_fig:
-        print(7)
         plt.savefig('D:\\{}_{}_{}.png'.format(sensor_name, yLabel, time.time()), dpi=1200)
-    print(8)
-    # plt.show(block=True)
+
+    plt.show(block=True)
     # plt.draw()
 
 
@@ -168,8 +166,53 @@ def __point_for_save(Value, sensor_name, yLabel):
 
 
 if __name__ == '__main__':
-    one_plot()
+    # one_plot()
 
+    import matplotlib.pyplot as plt
+    import datetime
+    import random
+    import time
+    import numpy as np
+
+    x_1 = []
+    x_2 = []
+    x_3 = list()
+    y_1 = list()
+    y_2 = list()
+    y_3 = list()
+    for n in range(50):
+        x_1.append(datetime.datetime.now() + datetime.timedelta(0, 2*n))
+        # x.append(time.time() + 2*n)
+        y_1.append(random.randint(5, 10))
+        if 15 > n > 7:
+            x_2.append(datetime.datetime.now() + datetime.timedelta(0, 2*n))
+            y_2.append(random.randint(7, 15))
+        if n == 16:
+            x_2.append(datetime.datetime.now() + datetime.timedelta(0, 2*n))
+            y_2.append(None)
+        if n > 30:
+            x_2.append(datetime.datetime.now() + datetime.timedelta(0, 2 * n))
+            y_2.append(random.randint(2, 6))
+
+    # x_1 = np.array(x_1)
+    # x_2 = np.array(x_2)
+    # x_3 = np.array(x_3)
+    # y_1 = np.array(y_1)
+    # y_2 = np.array(y_2)
+    # y_3 = np.array(y_3)
+
+    fig, ax = plt.subplots()
+    ax.plot(x_1, y_1, color='cornflowerblue')
+    ax.plot(x_2, y_2, color='C1')
+    # ax.plot(x_3, y_3, color='C1')
+
+    # plt.xticks(x_1, rotation='vertical')
+    # ax.xaxis.set_visible(False)
+    # ax.set_xticks(x_1, rotation='vertical')
+
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    plt.show()
 
 
 
