@@ -155,7 +155,7 @@ def select_all_table(cursor):
 
 
 if __name__ == '__main__':
-    name = 'Energizer CR2 1569313216.572497'
+    name = 'LiFePo BESTON CR123A 1569399012.2854226'
     # db_conn, db_cursor = init_db('d:\qua\Check_battery_software\Energizer CR2 1568818428.4618394')
     db_conn, db_cursor = init_db('d:\qua\Check_battery_software\{}'.format(name))
     # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
@@ -177,9 +177,9 @@ if __name__ == '__main__':
     # plot_start = Process(target=one_plot, args=([volt, data_time], 'VOLT'))
     # plot_start.start()
 
-    one_plot([volt, data_time], yLabel='VOLT', sensor_name='{} {} {}mA'.format(name.split(' ')[0],
-                                                                               name.split(' ')[1],
-                                                                               delta_3600 * 32))
+    # one_plot([volt, data_time], yLabel='VOLT', sensor_name='{} {} {}mA'.format(name.split(' ')[0],
+    #                                                                            name.split(' ')[1],
+    #                                                                            delta_3600 * 32))
 
     # import time
 

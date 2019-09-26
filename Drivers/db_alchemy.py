@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from datetime import datetime
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, TIMESTAMP
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,16 +16,17 @@ __status__ = "Production"
 
 
 # ******* POSTGRES ********
-db_url = {'drivername': 'postgres',
-          'database': 'data_db',
-          'username': 'postgres',
-          'password': 'superdyatel',
-          'host': 'localhost',
-          'port': 5432}
-engine = create_engine(URL(**db_url))
+# db_url = {'drivername': 'postgres',
+#           'database': 'data_db',
+#           'username': 'postgres',
+#           'password': 'superdyatel',
+#           'host': 'localhost',
+#           'port': 5432}
+# engine = create_engine(URL(**db_url))
 
 # ******* SQLite **********
 # engine = create_engine("sqlite:///some.db")
+engine = create_engine("sqlite:///d:\qua\Check_battery_software\Energizer CR2 1569313216.572497.db")
 
 Base = declarative_base()
 
@@ -36,6 +37,22 @@ class TestTable(Base):
     key = Column(String, nullable=False)
     val = Column(String)
     date = Column(DateTime, default=datetime.utcnow)
+
+
+# class HeadData(Base):
+#     __tablename__ = 'head_data'
+#     battery_name = Column(String)
+#     discharge_current = Column(Integer)
+#     start_at_in_sec = Column(Integer)
+#     start_at_in_date = Column(DateTime)
+
+
+class BatteryData(Base):
+    __tablename__ = 'battery_data'
+    id = Column(Integer, primary_key=True)
+    time_sec = Column(String)
+    time_in_date = Column(String)
+    volt = Column(Integer)
 
 
 # create tables
@@ -87,6 +104,11 @@ try:
     rows = session.query(TestTable).all()
     for row in rows:
         print('ALL:', row.key, row.val, row.id, row.date)
+
+    rows = session.query(BatteryData).all()
+    print(rows)
+    for row in rows:
+        print('ALL:', row.id, row.time_sec, row.time_in_date, row.volt)
 except SQLAlchemyError as e:
     print(e)
 finally:
