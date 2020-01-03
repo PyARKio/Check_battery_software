@@ -157,9 +157,12 @@ def select_all_table(cursor):
 if __name__ == '__main__':
     name = 'LiFePo BESTON CR123A 1569399012.2854226'
     # db_conn, db_cursor = init_db('d:\qua\Check_battery_software\Energizer CR2 1568818428.4618394')
-    db_conn, db_cursor = init_db('d:\qua\Check_battery_software\{}'.format(name))
+    db_conn, db_cursor = init_db('../{}'.format(name))
     # db_conn, db_cursor = init_db('d:\QUA\Check_battery_software\\tr 1568881882.8805368')
+    select_all_table(db_cursor)
+
     volt = select_from_db(db_cursor, name_table_in_db='battery_data', param='volt')
+    print(volt)
     print(volt[0][0])
     print(volt[-1][0])
     data_time = select_from_db(db_cursor, name_table_in_db='battery_data', param='time_sec')

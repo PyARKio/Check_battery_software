@@ -92,7 +92,7 @@ class Thread4Serial(threading.Thread):
             try:
                 data = self.serial_port.readline()
             except Exception as err:
-                log.error('Can not read from port {}'.format(err))
+                log.error('Can not read from port. {}'.format(err))
             else:
                 try:
                     data = (data.decode('ascii')).strip()

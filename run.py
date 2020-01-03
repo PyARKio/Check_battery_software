@@ -239,7 +239,7 @@ class CheckBatteryCapacity(object):
             if data_cmd == 'exit':
                 self.serial_disconnect()
                 self.__cmd_run = False
-                self.stop = time.time()
+                self.stop = time.time()  # BUG!!! in this part need to be a flag
                 if self.start:
                     delta_3600 = (int(self.stop) - int(self.start)) / 3600
                     print('{} sec'.format(int(self.stop) - int(self.start)))
